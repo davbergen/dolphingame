@@ -4,7 +4,8 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
 
 public class InputListener implements GestureDetector.GestureListener {
-    private int readMovement = 0;
+    private int readMovementX = 0;
+    private int readMovementY = 0;
     @Override
     public boolean touchDown(float x, float y, int pointer, int button) {
         return false;
@@ -22,8 +23,10 @@ public class InputListener implements GestureDetector.GestureListener {
 
     @Override
     public boolean fling(float velocityX, float velocityY, int button) {
-        if(velocityX < 0) readMovement = 1; //should move right
-        if(velocityX > 0) readMovement = -1; //should move left
+        if(velocityX < 0 && Math.abs(velocityX) > Math.abs(velocityY)) readMovementX = 1; //should move right
+        else if(velocityX > 0 && Math.abs(velocityX) > Math.abs(velocityY)) readMovementX = -1; //should move left
+        else if(velocityY < 0 && Math.abs(velocityY) > Math.abs(velocityX)) readMovementY = 1; //should move right
+        else if(velocityY > 0 && Math.abs(velocityY) > Math.abs(velocityX)) readMovementY = -1; //should move left
         return false;
     }
 
@@ -52,11 +55,19 @@ public class InputListener implements GestureDetector.GestureListener {
 
     }
 
-    public int getReadMovement() {
-        return readMovement;
+    public int getReadMovementX() {
+        return readMovementX;
     }
 
-    public void setReadMovement(int readMovement) {
-        this.readMovement = readMovement;
+    public void setReadMovementX(int readMovementX) {
+        this.readMovementX = readMovementX;
+    }
+
+    public int getReadMovementY() {
+        return readMovementY;
+    }
+
+    public void setReadMovementY(int readMovementY) {
+        this.readMovementY = readMovementY;
     }
 }

@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.utils.Timer;
+
+import java.lang.*;
 
 public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -23,7 +26,6 @@ public class Game extends ApplicationAdapter {
 		img = new Texture("dolphin-prototype-1.0.png");
 		player = new Player(-180, 0, new Sprite(img));
 		Gdx.input.setInputProcessor(new GestureDetector(0.0f, 0.0f, 0.0f, 5f, inputListener));
-
 	}
 
 	@Override
@@ -31,14 +33,23 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
-		if(inputListener.getReadMovement() == 1){
+		if(inputListener.getReadMovementX() == 1){
 			player.moveLeft();
-			inputListener.setReadMovement(0);
+			inputListener.setReadMovementX(0);
 		}
-		else if(inputListener.getReadMovement() == -1){
+		else if(inputListener.getReadMovementX() == -1){
 			player.moveRight();
-			inputListener.setReadMovement(0);
+			inputListener.setReadMovementX(0);
 		}
+		else if(inputListener.getReadMovementY() == 1){
+			player.Jump();
+			inputListener.setReadMovementY(0);
+		}
+		else if(inputListener.getReadMovementY() == -1){
+			player.Dive();
+			inputListener.setReadMovementY(0);
+		}
+
 
 		batch.begin();
 		drawPlayer();

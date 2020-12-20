@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Player {
     int xPosition, zPosition;
+
     Sprite playerSprite;
 
     /**
@@ -32,11 +33,12 @@ public class Player {
     }
 
     void Jump(){
-
+        playerSprite.setScale(10.0f);
+        zPosition = 1;
     }
 
     void Dive(){
-
+        playerSprite.setScale(0.023f);
     }
 
     public int getxPosition() {
