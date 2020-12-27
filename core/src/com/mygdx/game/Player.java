@@ -4,8 +4,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Player {
     int xPosition, zPosition;
-
+    int lane;
     Sprite playerSprite;
+    boolean isMovingLeft, isMovingRight;
 
     /**
      * Constructor for player class
@@ -21,24 +22,22 @@ public class Player {
     }
 
     void moveRight(){
-        if(xPosition < 180){
-            xPosition += 360;
-        }
+        xPosition += 36;
     }
 
     void moveLeft(){
-        if(xPosition >= -180){
-            xPosition -= 360;
-        }
+        xPosition -= 36;
+
     }
 
     void Jump(){
-        playerSprite.setScale(10.0f);
-        zPosition = 1;
+        System.out.println("jump!");
+        zPosition += 1;
     }
 
     void Dive(){
-        playerSprite.setScale(0.023f);
+        System.out.println("dive!");
+        zPosition -= 1;
     }
 
     public int getxPosition() {
@@ -51,5 +50,21 @@ public class Player {
 
     public Sprite getPlayerSprite() {
         return playerSprite;
+    }
+
+    public boolean isMovingLeft() {
+        return isMovingLeft;
+    }
+
+    public boolean isMovingRight() {
+        return isMovingRight;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        isMovingLeft = movingLeft;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        isMovingRight = movingRight;
     }
 }

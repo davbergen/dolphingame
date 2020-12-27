@@ -18,6 +18,9 @@ public class Game extends ApplicationAdapter {
 	OrthographicCamera camera;
 	Player player;
 	InputListener inputListener = new InputListener();
+	GameTimer jumpTimer = new GameTimer();
+	GameTimer diveTimer = new GameTimer();
+	int moveCounter;
 	
 	@Override
 	public void create () {
@@ -33,27 +36,86 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0, 0, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
-		if(inputListener.getReadMovementX() == 1){
-			player.moveLeft();
-			inputListener.setReadMovementX(0);
-		}
-		else if(inputListener.getReadMovementX() == -1){
-			player.moveRight();
-			inputListener.setReadMovementX(0);
-		}
-		else if(inputListener.getReadMovementY() == 1){
-			player.Jump();
-			inputListener.setReadMovementY(0);
-		}
-		else if(inputListener.getReadMovementY() == -1){
-			player.Dive();
-			inputListener.setReadMovementY(0);
-		}
-
-
+		updatePlayer();
+		checkForInput();
 		batch.begin();
 		drawPlayer();
 		batch.end();
+	}
+
+	void checkForInput(){
+		if(inputListener.getReadMovementX() == 1){
+			processCommand("left");
+			inputListener.setReadMovementX(0);
+		}
+		else if(inputListener.getReadMovementX() == -1){
+			processCommand("right");
+			inputListener.setReadMovementX(0);
+		}
+		else if(inputListener.getReadMovementY() == 1){
+			processCommand("jump");
+			inputListener.setReadMovementY(0);
+		}
+		else if(inputListener.getReadMovementY() == -1){
+			processCommand("dive");
+			inputListener.setReadMovementY(0);
+		}
+	}
+
+	public void processCommand(String command){
+		switch (command){
+			case "left":
+				if(player.xPosition == 180 || player.xPosition == -180) {
+					player.setMovingLeft(true);
+				}
+				break;
+			case "right":
+				if(player.xPosition == -540 || player.xPosition == -180) {
+					player.setMovingRight(true);
+				}
+
+				break;
+			case "jump":
+				if(player.zPosition == 0){
+					player.Jump();
+					jumpTimer.start();
+				}
+				else if(player.zPosition == -1){
+					player.Jump();
+				}
+				break;
+			case "dive":
+				if(player.zPosition == 0){
+					player.Dive();
+					diveTimer.start();
+				}
+				else if(player.zPosition == 1){
+					player.Dive();
+				}
+				break;
+		}
+	}
+
+	public void updatePlayer(){
+		if(player.isMovingLeft && moveCounter < 10){
+			player.moveLeft();
+			moveCounter++;
+		}
+		else if(player.isMovingRight && moveCounter < 10){
+			player.moveRight();
+			moveCounter++;
+		}
+		else{
+			moveCounter = 0;
+			player.setMovingLeft(false);
+			player.setMovingRight(false);
+		}
+		if(player.zPosition == 1 && jumpTimer.getDeltaTime() >= 1000){
+			player.Dive();
+		}
+		else if(player.zPosition == -1 && diveTimer.getDeltaTime() >= 1000){
+			player.Jump();
+		}
 	}
 	
 	@Override
