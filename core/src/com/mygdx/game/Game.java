@@ -43,14 +43,12 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
 		updatePlayer();
-		updateObstacles();
 		checkForInput();
 		batch.begin();
-		drawObstacles();
+		updateObstacles();
 		drawPlayer();
 		batch.end();
-		if(spawnTimer.getDeltaTime() >= 1000){
-			System.out.println("CREATE");
+		if(spawnTimer.getDeltaTime() >= 2000){
 			createObstacles();
 		}
 	}
@@ -63,6 +61,7 @@ public class Game extends ApplicationAdapter {
 	private void updateObstacles() {
 		for(Obstacle obs : obsSpawner.getObstacles()){
 			obs.moveObstacle(difficultySpeed);
+			drawObstacle(obs);
 			if(obs.getyPosition() < -720){
 				obsSpawner.obstacles.remove(obs);
 			}
@@ -159,8 +158,7 @@ public class Game extends ApplicationAdapter {
 		batch.draw(player.getPlayerSprite(), player.getxPosition(), -960);
 	}
 
-	private void drawObstacles(){
-		for(Obstacle obstacle : obsSpawner.getObstacles())
+	private void drawObstacle(Obstacle obstacle){
 		batch.draw(obstacle.getObstacleSprite(), obstacle.getxPosition(), obstacle.getyPosition());
 	}
 }

@@ -22,15 +22,12 @@ public class ObstacleSpawner {
         int obstacleSetup = rnd.nextInt(6)+1;
         obstacles.add(new Obstacle (new Sprite(obstacleImg), 180, 1920, 0));
         if(obstacleSetup == 1 || obstacleSetup == 3 || obstacleSetup == 5){
-            System.out.println("ADDED");
             obstacles.add(new Obstacle (new Sprite(obstacleImg), 180, 1920, 0));
         }
         if(obstacleSetup == 2 || obstacleSetup == 3 || obstacleSetup == 6){
-            System.out.println("ADDED");
             obstacles.add(new Obstacle (new Sprite(obstacleImg), -180, 1920, 0));
         }
         if(obstacleSetup == 4 || obstacleSetup == 5 || obstacleSetup == 6){
-            System.out.println("ADDED");
             obstacles.add(new Obstacle (new Sprite(obstacleImg), -540, 1920, 0));
         }
     }
