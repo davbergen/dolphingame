@@ -49,7 +49,8 @@ public class Game extends ApplicationAdapter {
 		drawObstacles();
 		drawPlayer();
 		batch.end();
-		if(spawnTimer.elapsedTime >= 1000){
+		if(spawnTimer.getDeltaTime() >= 1000){
+			System.out.println("CREATE");
 			createObstacles();
 		}
 	}
