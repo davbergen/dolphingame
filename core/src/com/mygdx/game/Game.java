@@ -14,20 +14,26 @@ import java.lang.*;
 
 public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture img;
+	Texture playerImg;
+	Texture obstacleImg;
+	Obstacle obstacle;
 	OrthographicCamera camera;
 	Player player;
 	InputListener inputListener = new InputListener();
 	GameTimer jumpTimer = new GameTimer();
 	GameTimer diveTimer = new GameTimer();
 	int moveCounter;
+	float difficultySpeed;
 	
 	@Override
 	public void create () {
 		camera = new OrthographicCamera(1080, 1920);
 		batch = new SpriteBatch();
-		img = new Texture("dolphin-prototype-1.0.png");
-		player = new Player(-180, 0, new Sprite(img));
+		playerImg = new Texture("dolphin-prototype-1.0.png");
+		obstacleImg = new Texture("rock.jpg");
+		obstacle = new Obstacle(new Sprite(obstacleImg), -180, 1920, 0);
+		player = new Player(-180, 0, new Sprite(playerImg));
+		difficultySpeed = 1.0f;
 		Gdx.input.setInputProcessor(new GestureDetector(0.0f, 0.0f, 0.0f, 5f, inputListener));
 	}
 
@@ -37,10 +43,16 @@ public class Game extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
 		updatePlayer();
+		updateObstacles();
 		checkForInput();
 		batch.begin();
 		drawPlayer();
 		batch.end();
+	}
+
+	private void updateObstacles() {
+		//for(obstacles)
+		obstacle.moveObstacle(difficultySpeed);
 	}
 
 	void checkForInput(){
@@ -121,10 +133,15 @@ public class Game extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		batch.dispose();
-		img.dispose();
+		playerImg.dispose();
+		obstacleImg.dispose();
 	}
 
 	private void drawPlayer(){
 		batch.draw(player.getPlayerSprite(), player.getxPosition(), -960);
+	}
+
+	private void drawObstacle(Obstacle obstacle){
+		batch.draw(obstacle.getObstacleSprite(), obstacle.getxPosition(), obstacle.getyPosition());
 	}
 }
