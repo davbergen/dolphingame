@@ -15,13 +15,13 @@ import java.lang.*;
 public class Game extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture playerImg;
-	Texture obstacleImg;
-	Obstacle obstacle;
+	ObstacleSpawner obsSpawner;
 	OrthographicCamera camera;
 	Player player;
 	InputListener inputListener = new InputListener();
 	GameTimer jumpTimer = new GameTimer();
 	GameTimer diveTimer = new GameTimer();
+	GameTimer spawnTimer = new GameTimer();
 	int moveCounter;
 	float difficultySpeed;
 	
@@ -30,8 +30,8 @@ public class Game extends ApplicationAdapter {
 		camera = new OrthographicCamera(1080, 1920);
 		batch = new SpriteBatch();
 		playerImg = new Texture("dolphin-prototype-1.0.png");
-		obstacleImg = new Texture("rock.jpg");
-		obstacle = new Obstacle(new Sprite(obstacleImg), -180, 1920, 0);
+		obsSpawner = new ObstacleSpawner();
+		spawnTimer.start();
 		player = new Player(-180, 0, new Sprite(playerImg));
 		difficultySpeed = 1.0f;
 		Gdx.input.setInputProcessor(new GestureDetector(0.0f, 0.0f, 0.0f, 5f, inputListener));
@@ -46,13 +46,27 @@ public class Game extends ApplicationAdapter {
 		updateObstacles();
 		checkForInput();
 		batch.begin();
+		drawObstacles();
 		drawPlayer();
 		batch.end();
+		if(spawnTimer.elapsedTime >= 1000){
+			createObstacles();
+		}
+	}
+
+	private void createObstacles() {
+		obsSpawner.spawnObstacle();
+		spawnTimer.start();
 	}
 
 	private void updateObstacles() {
-		//for(obstacles)
-		obstacle.moveObstacle(difficultySpeed);
+		for(Obstacle obs : obsSpawner.getObstacles()){
+			obs.moveObstacle(difficultySpeed);
+			if(obs.getyPosition() < -720){
+				obsSpawner.obstacles.remove(obs);
+			}
+		}
+
 	}
 
 	void checkForInput(){
@@ -134,14 +148,18 @@ public class Game extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		playerImg.dispose();
-		obstacleImg.dispose();
+		for(Obstacle obs : obsSpawner.getObstacles()){
+			obs.getObstacleSprite().getTexture().dispose();
+		}
+
 	}
 
 	private void drawPlayer(){
 		batch.draw(player.getPlayerSprite(), player.getxPosition(), -960);
 	}
 
-	private void drawObstacle(Obstacle obstacle){
+	private void drawObstacles(){
+		for(Obstacle obstacle : obsSpawner.getObstacles())
 		batch.draw(obstacle.getObstacleSprite(), obstacle.getxPosition(), obstacle.getyPosition());
 	}
 }
