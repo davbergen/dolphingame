@@ -18,9 +18,7 @@ public class ObstacleSpawner {
     }
 
     public void spawnObstacle(){
-        System.out.println("spawnobs called");
         int obstacleSetup = rnd.nextInt(6)+1;
-        obstacles.add(new Obstacle (new Sprite(obstacleImg), 180, 1920, 0));
         if(obstacleSetup == 1 || obstacleSetup == 3 || obstacleSetup == 5){
             obstacles.add(new Obstacle (new Sprite(obstacleImg), 180, 1920, 0));
         }
