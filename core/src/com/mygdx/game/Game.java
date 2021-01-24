@@ -17,17 +17,20 @@ public class Game extends ApplicationAdapter {
 	Texture playerImg;
 	ObstacleSpawner obsSpawner;
 	OrthographicCamera camera;
+	CollisionChecker CC;
 	Player player;
 	InputListener inputListener = new InputListener();
 	GameTimer jumpTimer = new GameTimer();
 	GameTimer diveTimer = new GameTimer();
 	GameTimer spawnTimer = new GameTimer();
+	GameTimer worldTimer = new GameTimer();
 	int moveCounter;
 	float difficultySpeed;
 	
 	@Override
 	public void create () {
 		camera = new OrthographicCamera(1080, 1920);
+		CC = new CollisionChecker();
 		batch = new SpriteBatch();
 		playerImg = new Texture("dolphin-prototype-1.0.png");
 		obsSpawner = new ObstacleSpawner();
@@ -35,6 +38,7 @@ public class Game extends ApplicationAdapter {
 		difficultySpeed = 1.0f;
 		Gdx.input.setInputProcessor(new GestureDetector(0.0f, 0.0f, 0.0f, 5f, inputListener));
 		spawnTimer.start();
+		worldTimer.start();
 	}
 
 	@Override
@@ -49,8 +53,12 @@ public class Game extends ApplicationAdapter {
 		drawObstacles();
 		drawPlayer();
 		batch.end();
-		if(spawnTimer.getDeltaTime() >= 4000){
+		if(spawnTimer.getDeltaTime() >= 2000-(10*difficultySpeed) && spawnTimer.getDeltaTime() > 1000){
 			createObstacles();
+		}
+		if(worldTimer.getDeltaTime() >= 1000){
+			difficultySpeed += 0.05f;
+			worldTimer.start();
 		}
 	}
 
@@ -69,6 +77,9 @@ public class Game extends ApplicationAdapter {
 				}
 			}
 			for (Obstacle obs : obsSpawner.getObstacles()) {
+				if(CC.checkForCollision(obs, player)){
+					gameOver();
+				}
 				obs.moveObstacle(difficultySpeed);
 			}
 		}
@@ -161,12 +172,16 @@ public class Game extends ApplicationAdapter {
 	}
 
 	private void drawPlayer(){
-		batch.draw(player.getPlayerSprite(), player.getxPosition(), -960);
+		batch.draw(player.getPlayerSprite(), player.getxPosition(), player.getyPosition());
 	}
 
 	private void drawObstacles(){
 		for(Obstacle obstacle : obsSpawner.getObstacles()) {
 			batch.draw(obstacle.getObstacleSprite(), obstacle.getxPosition(), obstacle.getyPosition());
 		}
+	}
+
+	private void gameOver(){
+		Gdx.app.exit();
 	}
 }

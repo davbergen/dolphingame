@@ -3,7 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class Player {
-    int xPosition, zPosition;
+    int xPosition, zPosition, yPosition;
+    int width, height;
     int lane;
     Sprite playerSprite;
     boolean isMovingLeft, isMovingRight;
@@ -18,17 +19,16 @@ public class Player {
         this.xPosition = xPosition;
         this.zPosition = zPosition;
         this.playerSprite = playerSprite;
-
+        yPosition = -960;
+        width = 360;
+        height = 360;
     }
 
     void moveRight(){
         xPosition += 36;
     }
 
-    void moveLeft(){
-        xPosition -= 36;
-
-    }
+    void moveLeft(){ xPosition -= 36; }
 
     void Jump(){
         System.out.println("jump!");
@@ -43,6 +43,8 @@ public class Player {
     public int getxPosition() {
         return xPosition;
     }
+
+    public int getyPosition() { return yPosition; }
 
     public int getzPosition() {
         return zPosition;
@@ -66,5 +68,13 @@ public class Player {
 
     public void setMovingRight(boolean movingRight) {
         isMovingRight = movingRight;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
     }
 }
